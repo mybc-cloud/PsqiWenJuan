@@ -208,7 +208,6 @@
         .tier-watch { color: #dd6b20; font-weight: 600; }
         .tier-warning { color: #e53e3e; font-weight: 600; }
 
-        /* 版权信息 */
         .footer {
             text-align: center;
             padding: 15px 25px;
@@ -259,16 +258,15 @@
             <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">◀ 上一题</button>
         </div>
 
-        <!-- 版权信息 -->
         <div class="footer">
-            © 2026 “今天你睡好了吗”小组 · 本评估仅供健康参考，不能替代医学诊断
+            © 2026 睡眠健康研究组 · 本评估仅供健康参考，不能替代医学诊断
         </div>
     </div>
 
     <script>
         (function() {
-            // ---------- 图片CDN路径 ----------
-            const IMAGE_BASE_PATH = "https://cdn.jsdelivr.net/gh/mybc-cloud/PsqiWenJuan/images/";
+            // ---------- 图片CDN路径（仅结果页加载单张PNG）----------
+            const IMAGE_BASE_PATH = "https://cdn.jsdelivr.net/gh/mybc-cloud/PsqiCeShi/images/";
 
             const questions = [
                 "总体来说，过去一个月我的睡眠质量还不错。",
@@ -327,11 +325,7 @@
                 "SMNF": { name:"浅眠用药疲惫型", tagline:"S+M+N+F", desc:"浅眠、依赖药物、白天极度疲惫，综合状况堪忧。", tier:"警戒梯队", tierClass:"tier-warning" }
             };
 
-            // ★★★ 预加载所有可能的结果图片 ★★★
-            Object.keys(sleepTypes).forEach(code => {
-                const img = new Image();
-                img.src = IMAGE_BASE_PATH + code + '.png';
-            });
+            // 注意：不再进行预加载，仅结果页加载一张图片
 
             // ---------- 状态 ----------
             let answers = new Array(totalQuestions).fill(-1);
@@ -477,6 +471,7 @@
 
             function showResultView(data) {
                 showView('result');
+                // 结果页仅加载一张图片
                 const html = `
                     <h2>🧬 您的睡眠评估结果</h2>
                     <img src="${IMAGE_BASE_PATH}${data.sleepCode}.png" alt="${data.sleepCode}" class="result-img" onerror="this.style.display='none'">
