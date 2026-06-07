@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌙 睡眠健康综合评估</title>
+    <!-- 预连接 CDN，加快后续图片加载 -->
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <style>
         :root {
             --primary: #4a6fa5;
@@ -204,6 +207,17 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
+        /* 图片占位样式 */
+        .img-placeholder {
+            text-align: center;
+            padding: 30px;
+            color: #a0aec0;
+            font-size: 14px;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
         .tier-health { color: #38a169; font-weight: 600; }
         .tier-watch { color: #dd6b20; font-weight: 600; }
         .tier-warning { color: #e53e3e; font-weight: 600; }
@@ -265,7 +279,7 @@
 
     <script>
         (function() {
-            // ---------- 图片CDN路径（仅结果页加载单张PNG）----------
+            // ---------- 图片CDN路径（仅结果页加载单张）----------
             const IMAGE_BASE_PATH = "https://cdn.jsdelivr.net/gh/mybc-cloud/PsqiCeShi/images/";
 
             const questions = [
@@ -324,8 +338,6 @@
                 "SMNA": { name:"碎眠用药耐受型", tagline:"S速眠+M碎片化+N依赖+A元气", desc:"睡眠碎片化、依赖药物，但白天仍能保持一定精力。", tier:"警戒梯队", tierClass:"tier-warning" },
                 "SMNF": { name:"浅眠用药疲惫型", tagline:"S+M+N+F", desc:"浅眠、依赖药物、白天极度疲惫，综合状况堪忧。", tier:"警戒梯队", tierClass:"tier-warning" }
             };
-
-            // 注意：不再进行预加载，仅结果页加载一张图片
 
             // ---------- 状态 ----------
             let answers = new Array(totalQuestions).fill(-1);
@@ -471,10 +483,16 @@
 
             function showResultView(data) {
                 showView('result');
-                // 结果页仅加载一张图片
+                // 结果页图片：使用占位提升加载体验
                 const html = `
                     <h2>🧬 您的睡眠评估结果</h2>
-                    <img src="${IMAGE_BASE_PATH}${data.sleepCode}.png" alt="${data.sleepCode}" class="result-img" onerror="this.style.display='none'">
+                    <div class="img-placeholder" id="imgPlaceholder">🌄 图片加载中...</div>
+                    <img src="${IMAGE_BASE_PATH}${data.sleepCode}.png" 
+                         alt="${data.sleepCode}" 
+                         class="result-img" 
+                         style="display:none;"
+                         onload="document.getElementById('imgPlaceholder').style.display='none'; this.style.display='block';"
+                         onerror="document.getElementById('imgPlaceholder').innerHTML='（暂无图片）'; this.style.display='none';">
                     <div class="result-block">
                         <p><strong>睡眠类型：</strong>${data.sleepCode}  ${data.typeName}</p>
                         <p>「${data.tagline}」</p>
